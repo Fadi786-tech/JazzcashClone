@@ -1,0 +1,899 @@
+{
+	"info": {
+		"_postman_id": "jazzcash-clone-api-2024",
+		"name": "Jazzcash Clone API",
+		"description": "Complete API collection for Jazzcash Clone Backend",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "John Doe",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "john.doe@example.com",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "password123",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "03001234567",
+									"type": "text"
+								},
+								{
+									"key": "cnic",
+									"value": "12345-1234567-1",
+									"type": "text"
+								},
+								{
+									"key": "picture",
+									"type": "file",
+									"src": []
+								},
+								{
+									"key": "bankAccounts",
+									"value": "[{\"bankId\":\"BANK_ID_HERE\",\"accountTitle\":\"John Doe\",\"accountNumber\":\"1234567890123456\",\"iban\":\"PK36SCBL0000001123456702\"}]",
+									"type": "text",
+									"description": "JSON array of bank accounts (optional)"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"auth",
+								"register"
+							]
+						},
+						"description": "Register a new user with optional picture upload"
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"john.doe@example.com\",\n    \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						},
+						"description": "Login user and get JWT token"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/users/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"users",
+								"all"
+							]
+						},
+						"description": "Get all users (public endpoint)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Balance",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5000/api/users/:id/balance",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"users",
+								":id",
+								"balance"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "USER_ID_HERE",
+									"description": "User ID from register/login response"
+								}
+							]
+						},
+						"description": "Get user balance (protected)"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Profile",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "John Updated",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "john.updated@example.com",
+									"type": "text"
+								},
+								{
+									"key": "phone",
+									"value": "03001234567",
+									"type": "text"
+								},
+								{
+									"key": "picture",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/users/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "USER_ID_HERE",
+									"description": "User ID from register/login response"
+								}
+							]
+						},
+						"description": "Update user profile (protected, optional picture upload)"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transfers",
+			"item": [
+				{
+					"name": "Transfer to JazzCash",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 500,\n    \"receiverIdentifier\": \"03009876543\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/transfer/jazzcash",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"transfer",
+								"jazzcash"
+							]
+						},
+						"description": "Transfer money to JazzCash number"
+					},
+					"response": []
+				},
+				{
+					"name": "Transfer to Bank",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 1000,\n    \"receiverIdentifier\": \"1234567890123456\",\n    \"bankAccountId\": \"BANK_ACCOUNT_ID_HERE\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/transfer/bank",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"transfer",
+								"bank"
+							]
+						},
+						"description": "Transfer money to bank account. receiverIdentifier can be account number, IBAN, or user ID. bankAccountId is optional."
+					},
+					"response": []
+				},
+				{
+					"name": "Transfer by CNIC",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 750,\n    \"receiverIdentifier\": \"98765-9876543-2\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/transfer/cnic",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"transfer",
+								"cnic"
+							]
+						},
+						"description": "Transfer money using CNIC"
+					},
+					"response": []
+				},
+				{
+					"name": "Transfer to Other Wallet",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 300,\n    \"receiverIdentifier\": \"03111234567\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/transfer/otherwallet",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"transfer",
+								"otherwallet"
+							]
+						},
+						"description": "Transfer money to other wallet"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Bills",
+			"item": [
+				{
+					"name": "Pay Bill",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"category\": \"Electricity\",\n    \"companyName\": \"KE Electric\",\n    \"consumerNumber\": \"123456789\",\n    \"amount\": 2500\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/bills/pay",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"bills",
+								"pay"
+							]
+						},
+						"description": "Pay utility bill (Electricity, Gas, Water, Internet, Telephone)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Bills",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5000/api/bills/:userId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"bills",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "USER_ID_HERE",
+									"description": "User ID from register/login response"
+								}
+							]
+						},
+						"description": "Get all bills for a user"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Load & Packages",
+			"item": [
+				{
+					"name": "Prepaid Load",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"mobileNumber\": \"03001234567\",\n    \"operator\": \"Jazz\",\n    \"amount\": 100\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/load/prepaid",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"load",
+								"prepaid"
+							]
+						},
+						"description": "Purchase prepaid load"
+					},
+					"response": []
+				},
+				{
+					"name": "Postpaid Load",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"mobileNumber\": \"03001234567\",\n    \"operator\": \"Zong\",\n    \"amount\": 200\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/load/postpaid",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"load",
+								"postpaid"
+							]
+						},
+						"description": "Purchase postpaid load"
+					},
+					"response": []
+				},
+				{
+					"name": "Package Load",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"mobileNumber\": \"03001234567\",\n    \"operator\": \"Telenor\",\n    \"amount\": 299,\n    \"packageName\": \"Weekly Bundle 5GB\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/load/package",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"load",
+								"package"
+							]
+						},
+						"description": "Purchase package (internet/data bundle)"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auto Payments",
+			"item": [
+				{
+					"name": "Create Auto Payment - Bill",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 2500,\n    \"type\": \"bill\",\n    \"schedule\": \"monthly\",\n    \"billId\": \"BILL_ID_HERE\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/autopayments/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"autopayments",
+								"create"
+							]
+						},
+						"description": "Create auto payment for bill (daily, weekly, monthly)"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Auto Payment - Transfer",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"amount\": 1000,\n    \"type\": \"transfer\",\n    \"schedule\": \"weekly\",\n    \"receiverId\": \"RECEIVER_USER_ID_HERE\",\n    \"receiverType\": \"JazzCash\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/autopayments/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"autopayments",
+								"create"
+							]
+						},
+						"description": "Create auto payment for transfer (daily, weekly, monthly)"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Auto Payments",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5000/api/autopayments/:userId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"autopayments",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "USER_ID_HERE",
+									"description": "User ID from register/login response"
+								}
+							]
+						},
+						"description": "Get all auto payments for a user"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Bank Accounts",
+			"item": [
+				{
+					"name": "Get All Banks",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/bank/banks",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"bank",
+								"banks"
+							]
+						},
+						"description": "Get list of all Pakistani banks (public endpoint)"
+					},
+					"response": []
+				},
+				{
+					"name": "Add Bank Account",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"bankId\": \"BANK_ID_HERE\",\n    \"accountTitle\": \"John Doe\",\n    \"accountNumber\": \"1234567890123456\",\n    \"iban\": \"PK36SCBL0000001123456702\",\n    \"isDefault\": true\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/bank/accounts",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"bank",
+								"accounts"
+							]
+						},
+						"description": "Add a new bank account for the authenticated user"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User Bank Accounts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5000/api/bank/accounts/:userId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"bank",
+								"accounts",
+								":userId"
+							],
+							"variable": [
+								{
+									"key": "userId",
+									"value": "USER_ID_HERE",
+									"description": "User ID from register/login response"
+								}
+							]
+						},
+						"description": "Get all bank accounts for a user"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Bank Account",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"accountTitle\": \"John Updated\",\n    \"accountNumber\": \"9876543210987654\",\n    \"iban\": \"PK36SCBL0000001987654321\",\n    \"isDefault\": false\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/bank/accounts/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"bank",
+								"accounts",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "BANK_ACCOUNT_ID_HERE",
+									"description": "Bank account ID"
+								}
+							]
+						},
+						"description": "Update bank account details"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Bank Account",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5000/api/bank/accounts/:id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"bank",
+								"accounts",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "BANK_ACCOUNT_ID_HERE",
+									"description": "Bank account ID to delete"
+								}
+							]
+						},
+						"description": "Delete (soft delete) a bank account"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Health",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:5000/api/health",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "5000",
+							"path": [
+								"api",
+								"health"
+							]
+						},
+						"description": "Check if server is running"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:5000",
+			"type": "string"
+		},
+		{
+			"key": "jwt_token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}
