@@ -1,5 +1,4 @@
 import api from '../utils/api';
-//import { FormData } from '../types';
 
 export interface RegisterData {
   name: string;
@@ -37,6 +36,7 @@ export const authService = {
       },
     });
     return response.data;
+    
   },
 
   login: async (data: LoginData) => {

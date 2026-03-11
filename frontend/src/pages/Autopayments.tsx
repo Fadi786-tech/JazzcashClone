@@ -51,6 +51,24 @@ const Autopayments: React.FC = () => {
     });
   };
 
+  const handleDelete = async (autopaymentId: string) => {
+    if (!window.confirm('Are you sure you want to delete this Autopayment?')) {
+      return;
+    }
+
+    try {
+      const response = await autopaymentService.deleteUserAutopayments(autopaymentId);
+      if (response.success) {
+        setAutopayments(autopayments.filter((acc) => acc._id !== autopaymentId));
+        setSuccess('Autopayment deleted successfully!');
+      }
+    } catch (err: any) {
+      setError(
+        err.response?.data?.message || err.message || 'Delete failed'
+      );
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -199,7 +217,7 @@ const Autopayments: React.FC = () => {
               {formData.type === 'bill' && (
                 <div>
                   <label className="block text-gray-700 font-medium mb-2">
-                    Bill ID (Optional)
+                    Bill ID
                   </label>
                   <input
                     type="text"
@@ -215,7 +233,7 @@ const Autopayments: React.FC = () => {
               {formData.type === 'transfer' && (
                 <div>
                   <label className="block text-gray-700 font-medium mb-2">
-                    Receiver ID (Optional)
+                    Receiver ID
                   </label>
                   <input
                     type="text"
@@ -361,6 +379,20 @@ const Autopayments: React.FC = () => {
                         {new Date(autopayment.lastExecuted).toLocaleString()}
                       </p>
                     )}
+                  </div>
+                  <div className="flex gap-2">
+                    {/* <button
+                      onClick={() => handleEdit(account)}
+                      className="px-4 py-2 bg-primary-100 text-primary-700 rounded-lg hover:bg-primary-200 transition"
+                    >
+                      Edit
+                    </button> */}
+                    <button
+                      onClick={() => handleDelete(autopayment._id)}
+                      className="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition"
+                    >
+                      Delete
+                    </button>
                   </div>
                 </div>
               </div>

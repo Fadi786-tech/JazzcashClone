@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import Layout from '../components/Layout';
 import { transferService } from '../services/transferService';
 
-type TransferType = 'jazzcash' | 'bank' | 'cnic' | 'otherwallet';
+type TransferType = 'jazzcash' | 'bank' | 'cnic';
 
 const Transfer: React.FC = () => {
   const { user, refreshUser } = useAuth();
@@ -17,7 +17,7 @@ const Transfer: React.FC = () => {
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
@@ -50,9 +50,6 @@ const Transfer: React.FC = () => {
         case 'cnic':
           response = await transferService.transferToCNIC(data);
           break;
-        case 'otherwallet':
-          response = await transferService.transferToOtherWallet(data);
-          break;
       }
 
       if (response.success) {
@@ -80,8 +77,6 @@ const Transfer: React.FC = () => {
         return 'Enter account number or IBAN';
       case 'cnic':
         return 'Enter CNIC number';
-      case 'otherwallet':
-        return 'Enter mobile number';
       default:
         return 'Enter identifier';
     }
@@ -96,7 +91,7 @@ const Transfer: React.FC = () => {
         <div className="bg-white rounded-lg shadow-md p-6 mb-6">
           <h2 className="text-xl font-semibold mb-4">Select Transfer Type</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {(['jazzcash', 'bank', 'cnic', 'otherwallet'] as TransferType[]).map((type) => (
+            {(['jazzcash', 'bank', 'cnic'] as TransferType[]).map((type) => (
               <button
                 key={type}
                 onClick={() => setTransferType(type)}
@@ -112,7 +107,7 @@ const Transfer: React.FC = () => {
                   ? 'Bank'
                   : type === 'cnic'
                   ? 'CNIC'
-                  : 'Other Wallet'}
+                  : ''}
               </button>
             ))}
           </div>

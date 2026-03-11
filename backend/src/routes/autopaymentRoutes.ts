@@ -3,6 +3,7 @@ import { body } from 'express-validator';
 import {
   createAutopayment,
   getUserAutopayments,
+  deleteUserAutopayments,
 } from '../controllers/autopaymentController';
 import { protect } from '../middleware/auth';
 
@@ -48,5 +49,5 @@ router.post(
 );
 
 router.get('/:userId', protect, getUserAutopayments);
-
+router.delete('/:autopaymentId', protect, deleteUserAutopayments);
 export default router;

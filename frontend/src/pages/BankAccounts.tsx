@@ -5,7 +5,7 @@ import { bankAccountService } from '../services/bankAccountService';
 import { Bank, BankAccount } from '../types';
 
 const BankAccounts: React.FC = () => {
-  const { user, refreshUser } = useAuth();
+  const { user } = useAuth();
   const [banks, setBanks] = useState<Bank[]>([]);
   const [bankAccounts, setBankAccounts] = useState<BankAccount[]>([]);
   const [showAddForm, setShowAddForm] = useState(false);
@@ -32,7 +32,7 @@ const BankAccounts: React.FC = () => {
           ]);
 
           if (banksResponse.success) {
-            setBanks(banksResponse.data.filter((bank: Bank) => bank.isActive));
+            setBanks(banksResponse.data)//.filter((bank: Bank) => bank.isActive));
           }
 
           if (accountsResponse.success) {
@@ -95,6 +95,7 @@ const BankAccounts: React.FC = () => {
         setShowAddForm(false);
         setEditingAccount(null);
 
+        // jab user bank account edit hoga tu ye code block dobara se user k bank accounts fetch kary ga ta ky jo updates ki han wo show ho jayen 
         if (user) {
           const accountsResponse = await bankAccountService.getUserBankAccounts(
             user._id

@@ -5,7 +5,7 @@ import { userService } from '../services/userService';
 import { getPictureUrl } from '../utils/pictureUrl';
 
 const Profile: React.FC = () => {
-  const { user, updateUser, refreshUser } = useAuth();
+  const { user, refreshUser } = useAuth();
   const [formData, setFormData] = useState({
     name: user?.name || '',
     email: user?.email || '',

@@ -21,5 +21,10 @@ export const autopaymentService = {
     const response = await api.get(`/autopayments/${userId}`);
     return response.data;
   },
+
+  deleteUserAutopayments: async (autopaymentId: string) => {
+    const response = await api.delete(`/autopayments/${autopaymentId}`);
+    return response.data;
+  },
 };
 

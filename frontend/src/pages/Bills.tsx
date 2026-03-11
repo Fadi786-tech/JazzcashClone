@@ -68,7 +68,7 @@ const Bills: React.FC = () => {
         });
         await refreshUser();
 
-        // Refresh bills list
+        // Bill successfully pay hony k baad ye code block bills refresh kary ga. ta ky updated bills show ho jayen user ko
         if (user) {
           const billsResponse = await billService.getUserBills(user._id);
           if (billsResponse.success) {

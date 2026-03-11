@@ -95,6 +95,27 @@ export const createAutopayment = async (req: AuthRequest, res: Response): Promis
   }
 };
 
+export const deleteUserAutopayments = async (req: AuthRequest, res: Response): Promise<void> => {
+  try {
+    const autopaymentId = req.params.autopaymentId;
+
+    const autopayments = await Autopayment.findByIdAndDelete(autopaymentId);
+    ({ autopaymentId });
+ 
+    res.status(200).json({
+      success: true,
+      message: 'Autopayment deleted successfully',
+      data: autopayments,
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      success: false,
+      message: error.message || 'Server error',
+    });
+  }
+};
+
+
 export const getUserAutopayments = async (req: AuthRequest, res: Response): Promise<void> => {
   try {
     const userId = req.params.userId;

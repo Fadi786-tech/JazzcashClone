@@ -29,7 +29,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* Header */}
+      {/* ye poori app ka header hai */}
       <header className="bg-primary-600 text-white shadow-lg">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -67,26 +67,18 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
       <div className="container mx-auto px-4 py-6">
         <div className="flex gap-6">
-          {/* Sidebar */}
+          {/* ye poori app ka sidebar hai */}
           <aside className="w-64 bg-white rounded-lg shadow-md p-4 h-fit">
             <nav className="space-y-2">
               <Link
                 to="/dashboard"
-                className={`block px-4 py-3 rounded-lg transition ${
-                  isActive('/dashboard')
-                    ? 'bg-primary-600 text-white'
-                    : 'text-gray-700 hover:bg-gray-100'
-                }`}
+                 className={`block px-4 py-3 rounded-lg transition `}
               >
                 Dashboard
               </Link>
               <Link
                 to="/transfer"
-                className={`block px-4 py-3 rounded-lg transition ${
-                  isActive('/transfer')
-                    ? 'bg-primary-600 text-white'
-                    : 'text-gray-700 hover:bg-gray-100'
-                }`}
+                 className={`block px-4 py-3 rounded-lg transition `}
               >
                 Transfer Money
               </Link>
@@ -143,7 +135,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             </nav>
           </aside>
 
-          {/* Main Content */}
+          {/* ye poori app ka main content hai. jisme jitne bhi pages hai wo show hoga. */}
           <main className="flex-1">{children}</main>
         </div>
       </div>
