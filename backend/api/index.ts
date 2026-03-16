@@ -28,8 +28,8 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve uploaded files
-app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+// Note: File uploads now use memory storage for Vercel compatibility
+// For production, consider using cloud storage (AWS S3, Cloudinary, etc.)
 
 // Routes
 app.use('/api/auth', authRoutes);
@@ -68,6 +68,7 @@ app.get('/', (req, res) => {
   res.status(200).json({
     success: true,
     message: 'JazzCash Clone API is running',
+    note: 'File uploads use memory storage - consider cloud storage for production',
     endpoints: {
       health: '/api/health',
       auth: '/api/auth',

@@ -1,23 +1,9 @@
 import multer from 'multer';
 import path from 'path';
-import fs from 'fs';
 
-const uploadsDir = path.join(__dirname, '../../uploads');
-
-// Create uploads directory if it doesn't exist
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
-}
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadsDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-  },
-});
+// For Vercel deployment, use memory storage instead of disk storage
+// Files will be stored in memory temporarily during the request
+const storage = multer.memoryStorage();
 
 const fileFilter = (req: Express.Request, file: Express.Multer.File, cb: multer.FileFilterCallback) => {
   const allowedTypes = /jpeg|jpg|png|gif/;
