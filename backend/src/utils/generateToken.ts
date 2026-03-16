@@ -8,7 +8,11 @@ export const generateToken = (id: string): string => {
     throw new Error('JWT_SECRET is not defined in environment variables');
   }
 
-  return jwt.sign({ id }, jwtSecret, {
-    expiresIn: jwtExpiresIn,
-  });
+  return jwt.sign(
+    { id },
+    jwtSecret,
+    {
+      expiresIn: jwtExpiresIn as jwt.SignOptions["expiresIn"],
+    }
+  );
 };

@@ -52,6 +52,34 @@ app.get('/api/health', (req, res) => {
   });
 });
 
+// Manual autopayment trigger (for testing)
+app.get('/api/trigger-autopayments', async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    const cronSecret = process.env.CRON_SECRET;
+
+    if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
+      return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    // Import the autopayment function
+    const { runAutopayment } = await import('../src/cron/autopaymentCron');
+    await runAutopayment();
+
+    res.status(200).json({
+      success: true,
+      message: 'Autopayments triggered manually',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('Manual autopayment trigger error:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Failed to trigger autopayments'
+    });
+  }
+});
+
 // Error handling middleware
 app.use(notFound);
 app.use(errorHandler);

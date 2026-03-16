@@ -57,6 +57,7 @@
   "devDependencies": {
     "@fast-check/jest": "^2.2.0",
     "autoprefixer": "^10.4.16",
+    "baseline-browser-mapping": "^2.10.0",
     "fast-check": "^4.6.0",
     "postcss": "^8.4.32",
     "tailwindcss": "^3.3.6",

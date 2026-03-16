@@ -19,7 +19,20 @@ const Login: React.FC = () => {
       await login(email, password);
       navigate('/dashboard');
     } catch (err: any) {
-      setError(err.response?.data?.message || err.message || 'Login failed');
+      console.error('Login error:', err);
+      
+      // Handle different types of errors
+      if (err.code === 'ERR_NETWORK') {
+        setError('Network error: Cannot connect to server. Please check if the backend is running.');
+      } else if (err.response?.status === 0) {
+        setError('Network error: Server is not responding. Please check your connection.');
+      } else if (err.response?.data?.message) {
+        setError(err.response.data.message);
+      } else if (err.message) {
+        setError(err.message);
+      } else {
+        setError('Login failed. Please try again.');
+      }
     } finally {
       setLoading(false);
     }

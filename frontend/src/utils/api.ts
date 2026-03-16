@@ -27,11 +27,21 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   (error) => {
+    console.error('API Error:', error);
+    
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       window.location.href = '/login';
     }
+    
+    // Add more specific error information
+    if (error.code === 'ERR_NETWORK') {
+      error.message = 'Network Error: Cannot connect to server';
+    } else if (error.response?.status === 0) {
+      error.message = 'Server is not responding';
+    }
+    
     return Promise.reject(error);
   }
 );
