@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import { User } from '../types';
 import { authService } from '../services/authService';
 import { userService } from '../services/userService';
@@ -18,28 +18,6 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const initAuth = async () => {
-      const token = localStorage.getItem('token');
-      const savedUser = localStorage.getItem('user');
-      
-      if (token && savedUser) {
-        try {
-          setUser(JSON.parse(savedUser));
-          // Refresh user data from server
-          await refreshUser();
-        } catch (error) {
-          console.error('Error initializing auth:', error);
-          localStorage.removeItem('token');
-          localStorage.removeItem('user');
-        }
-      }
-      setLoading(false);
-    };
-
-    initAuth();
-  }, []);
 
   const login = async (email: string, password: string) => {
     try {
@@ -73,18 +51,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
-  const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    setUser(null);
-  };
-
   const updateUser = (updatedUser: User) => {
     setUser(updatedUser);
     localStorage.setItem('user', JSON.stringify(updatedUser));
   };
 
-  const refreshUser = async () => {
+  const logout = useCallback(() => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
+    setUser(null);
+  }, []);
+
+  const refreshUser = useCallback(async () => {
     try {
       const response = await userService.getCurrentUser();
       if (response.success && response.data) {
@@ -96,7 +74,29 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       console.error('Error refreshing user:', error);
       logout();
     }
-  };
+  }, [logout]);
+
+  useEffect(() => {
+    const initAuth = async () => {
+      const token = localStorage.getItem('token');
+      const savedUser = localStorage.getItem('user');
+      
+      if (token && savedUser) {
+        try {
+          setUser(JSON.parse(savedUser));
+          // Refresh user data from server
+          await refreshUser();
+        } catch (error) {
+          console.error('Error initializing auth:', error);
+          localStorage.removeItem('token');
+          localStorage.removeItem('user');
+        }
+      }
+      setLoading(false);
+    };
+
+    initAuth();
+  }, [refreshUser]);
 
   return (
     <AuthContext.Provider
