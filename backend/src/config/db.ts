@@ -21,7 +21,8 @@ const connectDB = async (): Promise<void> => {
 
     console.log(`MongoDB Connected: ${conn.connection.host}`);
 
-    await initializeBanks();
+    // Initialize banks in background, don't wait for it
+    initializeBanks().catch(console.error);
 
   } catch (error) {
     console.error('Error connecting to MongoDB:', error);

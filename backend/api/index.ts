@@ -4,7 +4,6 @@ import dotenv from 'dotenv';
 import path from 'path';
 import connectDB from '../src/config/db';
 import { errorHandler, notFound } from '../src/middleware/errorHandler';
-import { initializeBanks } from '../src/utils/initializeBanks';
 
 // Import routes
 import authRoutes from '../src/routes/authRoutes';
@@ -17,9 +16,6 @@ import bankAccountRoutes from '../src/routes/bankAccountRoutes';
 
 // Load environment variables
 dotenv.config();
-
-// Connect to database
-connectDB();
 
 // Initialize Express app
 const app = express();
@@ -49,6 +45,39 @@ app.get('/api/health', (req, res) => {
   res.status(200).json({
     success: true,
     message: 'Server is running on Vercel',
+    timestamp: new Date().toISOString(),
+    env: {
+      nodeEnv: process.env.NODE_ENV,
+      hasMongoUri: !!process.env.MONGODB_URI,
+      hasJwtSecret: !!process.env.JWT_SECRET
+    }
+  });
+});
+
+// Simple test route that doesn't require database
+app.get('/api/test', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Test endpoint working',
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Root route
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'JazzCash Clone API is running',
+    endpoints: {
+      health: '/api/health',
+      auth: '/api/auth',
+      users: '/api/users',
+      transfer: '/api/transfer',
+      bills: '/api/bills',
+      load: '/api/load',
+      autopayments: '/api/autopayments',
+      bank: '/api/bank'
+    }
   });
 });
 
@@ -83,6 +112,9 @@ app.get('/api/trigger-autopayments', async (req, res) => {
 // Error handling middleware
 app.use(notFound);
 app.use(errorHandler);
+
+// Initialize database connection (but don't wait for it to avoid blocking)
+connectDB().catch(console.error);
 
 // Export the Express API
 export default app;
